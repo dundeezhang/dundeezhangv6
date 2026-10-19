@@ -322,12 +322,8 @@ html[data-signature-intro] .masthead-domain {
   align-items: center;
   justify-content: center;
   height: 2rem;
-  color: inherit;
-  text-decoration: none;
-}
-
-.webring a:hover {
   color: var(--foreground);
+  text-decoration: none;
 }
 
 .webring-home {
@@ -361,17 +357,16 @@ html[data-signature-intro] .masthead-domain {
   opacity: 1;
 }
 
-.navbar a,
-.webring a {
+.navbar a {
   transition: color 160ms ease, text-decoration-color 160ms ease, opacity 160ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  :is(.navbar, .webring) a:hover {
+  .navbar a:hover {
     opacity: 1;
   }
 
-  :is(.navbar, .webring):has(a:hover) a:not(:hover) {
+  .navbar:has(a:hover) a:not(:hover) {
     opacity: 0.25;
   }
 }
