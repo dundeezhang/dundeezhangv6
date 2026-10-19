@@ -530,6 +530,17 @@ html[data-signature-intro] .masthead-domain {
   font-size: 1rem;
 }
 
+/* Cover the area revealed beneath fixed footers by translucent iOS browser controls. */
+.site-footer::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  inset-inline: 0;
+  height: max(10rem, env(safe-area-inset-bottom, 0px));
+  background: var(--background);
+  pointer-events: none;
+}
+
 .footer-start {
   display: flex;
   flex: 1;
