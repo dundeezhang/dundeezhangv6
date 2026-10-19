@@ -865,6 +865,11 @@ a.index-name:hover {
   text-align: left;
 }
 
+.experience-company-mobile,
+.experience-role-detail {
+  display: none;
+}
+
 .index-meta {
   grid-area: meta;
   margin: 0;
@@ -951,10 +956,21 @@ a.index-name:hover {
 
 @container (max-width: 40rem) {
   .experience-index .index-row {
-    grid-template-columns: minmax(0, 1fr) 7rem;
-    grid-template-areas:
-      "name meta"
-      "role role";
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "name meta";
+  }
+
+  .experience-index .index-role,
+  .experience-company-full {
+    display: none;
+  }
+
+  .experience-company-mobile {
+    display: inline;
+  }
+
+  .experience-role-detail {
+    display: block;
   }
 }
 

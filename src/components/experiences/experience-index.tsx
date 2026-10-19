@@ -33,6 +33,7 @@ export function ExperienceIndex() {
                 label={`${company}, ${role}`}
                 details={(
                   <>
+                    <p className="experience-role-detail"><strong>{role}</strong></p>
                     {details.map(({ label, text }) => (
                       <p key={label || text}>
                         {label && <strong>{label}. </strong>}
@@ -49,7 +50,12 @@ export function ExperienceIndex() {
                   </>
                 )}
               >
-                <span className="index-name">{company}</span>
+                <span className="index-name">
+                  <span className="experience-company-full">{company}</span>
+                  <span className="experience-company-mobile">
+                    {company.replace(/^Waterloo\b/, "UW")}
+                  </span>
+                </span>
                 {period && (
                   <span className="index-meta">
                     {context === "Current" ? "Present" : formatYears(period)}
