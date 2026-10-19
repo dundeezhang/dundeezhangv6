@@ -49,10 +49,10 @@ export const metadata: Metadata = {
       "Dundee Zhang's portfolio. View my projects and other works! Love from Toronto.",
     images: [
       {
-        url: "/card-preview.jpeg",
+        url: "/card-preview-v6.jpeg",
         width: 1200,
         height: 630,
-        alt: "Dundee Zhang Portfolio",
+        alt: "Dundee Zhang's homepage with a Garamond signature and colored ASCII art of Half Dome",
       },
     ],
   },
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     title: "Dundee Zhang",
     description:
       "Dundee Zhang's portfolio. View my projects and other works! Love from Toronto.",
-    images: ["/card-preview.jpeg"],
+    images: ["/card-preview-v6.jpeg"],
   },
 };
 
