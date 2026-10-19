@@ -15,7 +15,7 @@
     "tech": "TypeScript, Next.js, React, Tailwind CSS, Motion",
     "description": "My current portfolio, built with Next.js and server-rendered content for fast loading. Includes expandable experience and project lists, photography, and an animated handwritten signature.",
     "image": "",
-    "repo": "",
+    "repo": "https://github.com/dundeezhang/dundeezhangv6",
     "repoLabel": "GitHub Repository",
     "buttonClass": "",
     "link": "https://dundeezhang.com",
