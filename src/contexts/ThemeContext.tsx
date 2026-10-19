@@ -1,127 +1,71 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { createContext, useSyncExternalStore } from "react";
 import type { ReactNode } from "react";
-import { ThemeContext } from "./ThemeContextTypes";
-import type { Theme } from "./ThemeContextTypes";
+import { THEME_PREFERENCE_TTL, THEME_STORAGE_KEY } from "@/lib/appearance-bootstrap";
 
-interface ThemeProviderProps {
-  children: ReactNode;
+export type Theme = "light" | "dark";
+
+export interface ThemeContextType {
+  theme: Theme;
+  toggleTheme: () => void;
+  isLoaded: boolean;
 }
 
-export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>("light");
-  const [isLoaded, setIsLoaded] = useState(false);
+export const ThemeContext = createContext<ThemeContextType | undefined>(
+  undefined,
+);
+
+// A manual choice overrides the system theme until it expires.
+function hasRecentPreference() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(THEME_STORAGE_KEY) ?? "null");
+    if (saved?.timestamp > Date.now() - THEME_PREFERENCE_TTL) return true;
+  } catch {
+    // Invalid data is removed below.
+  }
+  localStorage.removeItem(THEME_STORAGE_KEY);
+  return false;
+}
+
+function applyTheme(theme: Theme) {
+  document.documentElement.dataset.theme = theme;
+  document.documentElement.classList.toggle("dark", theme === "dark");
+}
+
+// The inline bootstrap resolves the saved or system theme onto <html> before
+// first paint, so the document is the source of truth after hydration.
+function subscribeToTheme(onChange: () => void) {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributeFilter: ["data-theme"] });
+  const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const handleSystemThemeChange = (event: MediaQueryListEvent) => {
+    if (!hasRecentPreference()) applyTheme(event.matches ? "dark" : "light");
+  };
+  mediaQuery.addEventListener("change", handleSystemThemeChange);
+  return () => {
+    observer.disconnect();
+    mediaQuery.removeEventListener("change", handleSystemThemeChange);
+  };
+}
+
+const getTheme = (): Theme =>
+  document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+const getServerTheme = (): Theme => "light";
+const subscribeToNothing = () => () => {};
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const theme = useSyncExternalStore(subscribeToTheme, getTheme, getServerTheme);
+  const isLoaded = useSyncExternalStore(subscribeToNothing, () => true, () => false);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => {
-      const newTheme = prevTheme === "light" ? "dark" : "light";
-      if (typeof window !== "undefined") {
-        localStorage.setItem(
-          "themeData",
-          JSON.stringify({
-            theme: newTheme,
-            timestamp: Date.now(),
-          }),
-        );
-      }
-      return newTheme;
-    });
+    const nextTheme = theme === "light" ? "dark" : "light";
+    localStorage.setItem(
+      THEME_STORAGE_KEY,
+      JSON.stringify({ theme: nextTheme, timestamp: Date.now() }),
+    );
+    applyTheme(nextTheme);
   };
-
-  useEffect(() => {
-    // init theme on client side to avoid hydration mismatch
-    const initializeTheme = () => {
-      let initialTheme: Theme = "light";
-
-      if (typeof window !== "undefined") {
-        // check manual theme preference within last week
-        const savedThemeData = localStorage.getItem("themeData");
-        if (savedThemeData) {
-          try {
-            const { theme: savedTheme, timestamp } = JSON.parse(savedThemeData);
-            const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-
-            if (timestamp > oneWeekAgo) {
-              initialTheme = savedTheme;
-            } else {
-              // Remove expired preference
-              localStorage.removeItem("themeData");
-              // Fall back to system preference
-              initialTheme = window.matchMedia("(prefers-color-scheme: dark)")
-                .matches
-                ? "dark"
-                : "light";
-            }
-          } catch {
-            // invalid data, remove it
-            localStorage.removeItem("themeData");
-            initialTheme = window.matchMedia("(prefers-color-scheme: dark)")
-              .matches
-              ? "dark"
-              : "light";
-          }
-        } else {
-          initialTheme = window.matchMedia("(prefers-color-scheme: dark)")
-            .matches
-            ? "dark"
-            : "light";
-        }
-      }
-
-      setTheme(initialTheme);
-      setIsLoaded(true);
-    };
-
-    initializeTheme();
-  }, []);
-
-  useEffect(() => {
-    if (!isLoaded) return;
-
-    // apply theme to document root
-    if (typeof window !== "undefined") {
-      document.documentElement.setAttribute("data-theme", theme);
-      document.documentElement.classList.toggle("dark", theme === "dark");
-    }
-  }, [theme, isLoaded]);
-
-  useEffect(() => {
-    if (!isLoaded || typeof window === "undefined") return;
-
-    // listen for system theme changes
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const handleSystemThemeChange = (e: MediaQueryListEvent) => {
-      // only update if no recent manual preference
-      const savedThemeData = localStorage.getItem("themeData");
-      if (savedThemeData) {
-        try {
-          const { timestamp } = JSON.parse(savedThemeData);
-          const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-
-          if (timestamp > oneWeekAgo) {
-            // manual preference still valid, don't update
-            return;
-          } else {
-            // preference expired, remove and follow system
-            localStorage.removeItem("themeData");
-          }
-        } catch {
-          // invalid data, remove it
-          localStorage.removeItem("themeData");
-        }
-      }
-
-      setTheme(e.matches ? "dark" : "light");
-    };
-
-    mediaQuery.addEventListener("change", handleSystemThemeChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleSystemThemeChange);
-    };
-  }, [isLoaded]);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, isLoaded }}>
