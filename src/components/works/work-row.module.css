@@ -8,9 +8,3 @@
 .repoLink:focus-visible .repoIcon {
   transform: rotate(17deg);
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .repoIcon {
-    transition: none;
-  }
-}
