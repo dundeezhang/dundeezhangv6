@@ -19,28 +19,14 @@
   initial-value: #746e64;
 }
 
-@property --muted-light {
-  syntax: "<color>";
-  inherits: true;
-  initial-value: #817b71;
-}
-
 :root {
   color-scheme: light;
   --background: #fcfcfc;
   --foreground: #29261f;
-  --grid-color: #eeebe4;
-  --list-text-color: var(--foreground);
   --glass-bg: #f4f1eb;
-  --glass-border: #e4dfd5;
-  --glass-shadow: rgba(41, 38, 31, 0.06);
-  --button-border: #dcd6cb;
   --accent: #a1482e;
-  --accent-rgb: 161, 72, 46;
   --muted: #746e64;
-  --muted-light: #817b71;
   --underline-color: #c9c2b6;
-  --icon-invert: 0;
   --font-ui: var(--font-open-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --page-gutter: clamp(1.25rem, 5vw, 5rem);
 }
@@ -49,17 +35,10 @@
   color-scheme: dark;
   --background: #1e1e1e;
   --foreground: #e8e8e8;
-  --grid-color: #2b2b2b;
   --glass-bg: #252525;
-  --glass-border: #393939;
-  --glass-shadow: rgba(0, 0, 0, 0.12);
-  --button-border: #434343;
   --accent: #b0b0b0;
-  --accent-rgb: 176, 176, 176;
   --muted: #ababab;
-  --muted-light: #9b9b9b;
   --underline-color: #626262;
-  --icon-invert: 1;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -67,30 +46,15 @@
     color-scheme: dark;
     --background: #1e1e1e;
     --foreground: #e8e8e8;
-    --grid-color: #2b2b2b;
     --glass-bg: #252525;
-    --glass-border: #393939;
-    --glass-shadow: rgba(0, 0, 0, 0.12);
-    --button-border: #434343;
     --accent: #b0b0b0;
-    --accent-rgb: 176, 176, 176;
     --muted: #ababab;
-    --muted-light: #9b9b9b;
     --underline-color: #626262;
-    --icon-invert: 1;
   }
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-pink: var(--accent);
-  --color-grid: var(--grid-color);
-  --color-list-text: var(--list-text-color);
-  --color-glass-bg: var(--glass-bg);
-  --color-button-border: var(--button-border);
   --font-sans: var(--font-ui);
-  --font-serif: var(--font-eb-garamond), Garamond, "Times New Roman", serif;
 }
 
 html {
@@ -101,8 +65,7 @@ html {
   transition:
     --background 480ms ease-in-out,
     --foreground 480ms ease-in-out,
-    --muted 480ms ease-in-out,
-    --muted-light 480ms ease-in-out;
+    --muted 480ms ease-in-out;
 }
 
 body {
@@ -203,11 +166,6 @@ button:focus-visible {
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 1;
-}
-
-.masthead a {
-  color: inherit;
-  text-decoration: none;
 }
 
 .masthead-name {
@@ -393,15 +351,12 @@ html[data-signature-intro] .masthead-domain {
   color: var(--foreground);
   opacity: 0.5;
   text-decoration: none;
+  transition: color 160ms ease, text-decoration-color 160ms ease, opacity 160ms ease;
 }
 
 .navbar a:focus-visible,
 .navbar a[aria-current="page"] {
   opacity: 1;
-}
-
-.navbar a {
-  transition: color 160ms ease, text-decoration-color 160ms ease, opacity 160ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -422,95 +377,6 @@ html[data-signature-intro] .masthead-domain {
 
 .page-content {
   max-width: 48rem;
-}
-
-.page-content--wide {
-  max-width: 58rem;
-}
-
-/* Experience */
-
-.experience-list {
-  display: grid;
-  gap: 2.75rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.experience-heading {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1.5rem;
-}
-
-.experience-heading h2 {
-  margin: 0;
-  font-size: clamp(1.5rem, 2.3vw, 1.875rem);
-  font-weight: 400;
-  line-height: 1.3;
-  letter-spacing: -0.02em;
-}
-
-.experience-at {
-  color: var(--muted);
-}
-
-.experience-company {
-  font-style: italic;
-}
-
-.experience-context {
-  flex-shrink: 0;
-  margin: 0;
-  color: var(--muted);
-  font-size: 1rem;
-}
-
-.experience-summary,
-.experience-details {
-  max-width: 39rem;
-  margin-top: 0.875rem;
-  color: var(--muted);
-}
-
-.experience-details {
-  display: grid;
-  gap: 0.875rem;
-}
-
-.experience-details p {
-  margin: 0;
-}
-
-.experience-details strong {
-  color: var(--foreground);
-  font-weight: 500;
-}
-
-.experience-intro {
-  max-width: 37rem;
-  margin: 0 0 3.5rem;
-  color: var(--muted);
-}
-
-.home-note {
-  margin: 3.5rem 0 0;
-  color: var(--muted);
-  font-size: 1.0625rem;
-}
-
-.home-page-content a,
-.animated-link {
-  text-decoration: underline;
-  text-decoration-color: var(--underline-color);
-}
-
-.home-page-content a:hover,
-.animated-link:hover {
-  color: var(--accent);
-  text-decoration-color: currentColor;
 }
 
 /* Footer */
@@ -697,9 +563,6 @@ html[data-signature-intro] .masthead-domain {
 
 .index-entry {
   min-width: 0;
-}
-
-.index-entry {
   transition: opacity 160ms ease;
 }
 
@@ -835,16 +698,6 @@ html[data-signature-intro] .masthead-domain {
   overflow-wrap: normal;
 }
 
-a.index-name {
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  overflow-wrap: anywhere;
-}
-
-a.index-name:hover {
-  text-decoration-color: var(--underline-color);
-}
-
 .index-role {
   grid-area: role;
   min-width: 0;
@@ -852,10 +705,6 @@ a.index-name:hover {
   color: inherit;
   text-align: left;
   overflow-wrap: anywhere;
-}
-
-.experience-index .index-list {
-  row-gap: 0;
 }
 
 .experience-index .index-row {
@@ -867,13 +716,11 @@ a.index-name:hover {
 
 .experience-index .index-meta {
   justify-self: stretch;
-  text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
 .experience-index .index-role {
   justify-self: start;
-  text-align: left;
 }
 
 .experience-company-mobile,
@@ -990,24 +837,8 @@ a.index-name:hover {
     font-size: 1.0625rem;
   }
 
-  .navbar {
-    font-size: 1rem;
-  }
-
   .site-main {
     padding-bottom: calc(var(--site-footer-height, 12rem) + 1.5rem);
-  }
-
-  .experience-heading {
-    display: block;
-  }
-
-  .experience-context {
-    margin-top: 0.25rem;
-  }
-
-  .experience-list {
-    gap: 2.5rem;
   }
 
   .site-footer {
