@@ -1,0 +1,16 @@
+.repoIcon {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 180ms ease;
+}
+
+.repoLink:hover .repoIcon,
+.repoLink:focus-visible .repoIcon {
+  transform: rotate(17deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .repoIcon {
+    transition: none;
+  }
+}
