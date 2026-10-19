@@ -4,7 +4,7 @@ import { IndexDisclosure } from "@/components/index-disclosure";
 import styles from "./work-row.module.css";
 
 export function WorkRow({ work }: { work: Work }) {
-  const hasLiveLink = work.buttonClass !== "hide-button-class" && !!work.link;
+  const repoLabel = work.repo.startsWith("https://github.com/") ? "GitHub Repository" : "Git Repository";
 
   return (
     <IndexDisclosure
@@ -12,11 +12,9 @@ export function WorkRow({ work }: { work: Work }) {
       details={(
         <>
           <p>{work.description}</p>
-          {work.tech !== "More Tech Stacks" && (
-            <p className="index-technologies">
-              <strong>Built with </strong>{work.tech}.
-            </p>
-          )}
+          <p className="index-technologies">
+            <strong>Built with </strong>{work.tech}.
+          </p>
         </>
       )}
     >
@@ -28,13 +26,13 @@ export function WorkRow({ work }: { work: Work }) {
             href={work.repo}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`${work.repoLabel}: ${work.title}`}
-            title={work.repoLabel}
+            aria-label={`${repoLabel}: ${work.title}`}
+            title={repoLabel}
           >
             <Github className={styles.repoIcon} size={14} aria-hidden="true" />
           </a>
         )}
-        {hasLiveLink && (
+        {work.link && (
           <a
             className="index-live-link"
             href={work.link}
