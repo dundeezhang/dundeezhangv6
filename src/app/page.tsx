@@ -3,7 +3,6 @@ import HomeBanner from "@/components/home/home-banner";
 import styles from "./home.module.css";
 
 export const metadata: Metadata = {
-  title: "Dundee Zhang",
   description:
     "Dundee Zhang is a software engineer and Computer Science student at the University of Waterloo. Explore his experience, projects, and photography.",
 };
