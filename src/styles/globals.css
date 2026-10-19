@@ -216,6 +216,59 @@ button:focus-visible {
   white-space: nowrap;
 }
 
+.masthead-piece-trigger {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  vertical-align: baseline;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.masthead-piece-trigger:disabled { cursor: default; }
+.masthead-domain-text { transform-origin: left 80%; }
+
+.masthead-domain-text[data-fallen],
+.masthead-name[data-outline-ready] .masthead-hover-glyph[data-fallen] { visibility: hidden; }
+
+.signature-physics-layer {
+  position: fixed;
+  z-index: 60;
+  inset: 0;
+  overflow: hidden;
+  color: var(--foreground);
+  pointer-events: none;
+}
+
+.signature-physics-piece {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: auto;
+  will-change: transform;
+}
+
+.signature-physics-piece[data-dragging] { cursor: grabbing; }
+.signature-physics-layer[data-state="returning"] .signature-physics-piece { pointer-events: none; }
+.signature-physics-piece svg { display: block; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+
 .masthead-domain {
   display: inline-block;
   font-size: calc(var(--masthead-full-size) * 0.45);

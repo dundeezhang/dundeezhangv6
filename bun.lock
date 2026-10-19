@@ -4,8 +4,8 @@
     "": {
       "name": "dundeezhangv6",
       "dependencies": {
-        "flubber": "^0.4.2",
         "lucide-react": "^0.563.0",
+        "matter-js": "^0.20.0",
         "motion": "^14.3.0",
         "next": "^16.1.6",
         "react": "19.1.0",
@@ -18,11 +18,13 @@
       "devDependencies": {
         "@tailwindcss/postcss": "^4",
         "@types/flubber": "^0.4.0",
+        "@types/matter-js": "^0.20.2",
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
         "eslint": "^9",
         "eslint-config-next": "^16.1.6",
+        "flubber": "^0.4.2",
         "tailwindcss": "^4",
         "typescript": "^5.1.0",
       },
@@ -232,6 +234,8 @@
     "@types/json-schema": ["@types/json-schema@7.0.15", "", {}, "sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA=="],
 
     "@types/json5": ["@types/json5@0.0.29", "", {}, "sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ=="],
+
+    "@types/matter-js": ["@types/matter-js@0.20.2", "", {}, "sha512-3PPKy3QxvZ89h9+wdBV2488I1JLVs7DEpIkPvgO8JC1mUdiVSO37ZIvVctOTD7hIq8OAL2gJ3ugGSuUip6DhCw=="],
 
     "@types/mdast": ["@types/mdast@4.0.4", "", { "dependencies": { "@types/unist": "*" } }, "sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA=="],
 
@@ -732,6 +736,8 @@
     "markdown-table": ["markdown-table@3.0.4", "", {}, "sha512-wiYz4+JrLyb/DqW2hkFJxP7Vd7JuTDm77fvbM8VfEQdmSMqcImWeeRbHwZjBjIFki/VaMK2BhFi7oUUZeM5bqw=="],
 
     "math-intrinsics": ["math-intrinsics@1.1.0", "", {}, "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g=="],
+
+    "matter-js": ["matter-js@0.20.0", "", {}, "sha512-iC9fYR7zVT3HppNnsFsp9XOoQdQN2tUyfaKg4CHLH8bN+j6GT4Gw7IH2rP0tflAebrHFw730RR3DkVSZRX8hwA=="],
 
     "mdast-util-find-and-replace": ["mdast-util-find-and-replace@3.0.2", "", { "dependencies": { "@types/mdast": "^4.0.0", "escape-string-regexp": "^5.0.0", "unist-util-is": "^6.0.0", "unist-util-visit-parents": "^6.0.0" } }, "sha512-Tmd1Vg/m3Xz43afeNxDIhWRtFZgM2VLyaf4vSTYwudTyeuTneoL3qtWMA5jeLyz/O1vDJmmV4QuScFCA2tBPwg=="],
 

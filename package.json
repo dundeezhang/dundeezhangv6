@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "lucide-react": "^0.563.0",
+    "matter-js": "^0.20.0",
     "motion": "^14.3.0",
     "next": "^16.1.6",
     "react": "19.1.0",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/flubber": "^0.4.0",
+    "@types/matter-js": "^0.20.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
