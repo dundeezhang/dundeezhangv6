@@ -216,16 +216,6 @@ button:focus-visible {
   white-space: nowrap;
 }
 
-.masthead-letter,
-.masthead-hover-glyph,
-.masthead-domain-text {
-  transition: opacity 160ms ease;
-}
-
-.masthead-name[data-letter-hover] :is(.masthead-letter, .masthead-hover-glyph, .masthead-domain-text):not([data-hovered]) {
-  opacity: 0.25;
-}
-
 .masthead-domain {
   display: inline-block;
   font-size: calc(var(--masthead-full-size) * 0.45);

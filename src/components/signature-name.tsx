@@ -18,8 +18,7 @@ export function SignatureName() {
   useEffect(() => {
     const name = nameRef.current;
     const svg = name?.querySelector<SVGSVGElement>(".masthead-hover-svg");
-    const domain = name?.querySelector<HTMLElement>(".masthead-domain-text");
-    if (!isClient || !name || !svg || !domain) return;
+    if (!isClient || !name || !svg) return;
 
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -27,7 +26,6 @@ export function SignatureName() {
     let disposed = false;
     let ready = false;
     let hoverStrokeWidth = 0;
-    let domainInk = { top: 0, bottom: 0 };
 
     const letters = signature.letters.map((letter, index) => {
       const text = name.querySelector<HTMLElement>(`[data-name-letter="${index}"]`)!;
@@ -90,30 +88,13 @@ export function SignatureName() {
         left: `${inkX * unit}px`, top: `${baseline + inkY * unit}px`,
         width: `${inkWidth * unit}px`, height: `${inkHeight * unit}px`,
       });
-
-      // The domain stays one rectangular target, trimmed to its actual ink height.
-      const bounds = domain.getBoundingClientRect();
-      const style = getComputedStyle(domain);
-      context.font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-      const domainMetrics = context.measureText(".com");
-      const domainUnit = Number.parseFloat(style.fontSize) / signature.font.unitsPerEm;
-      const domainAscent = domainMetrics.fontBoundingBoxAscent ?? signature.font.ascent * domainUnit;
-      const domainDescent = domainMetrics.fontBoundingBoxDescent ?? signature.font.descent * domainUnit;
-      const domainBaseline = (bounds.height - domainAscent - domainDescent) / 2 + domainAscent;
-      domainInk = {
-        top: domainBaseline - domainMetrics.actualBoundingBoxAscent,
-        bottom: domainBaseline + domainMetrics.actualBoundingBoxDescent,
-      };
     };
 
     const activate = (index: number | null) => {
       if (index === selected || (!ready && index !== null)) return;
       selected = index;
-      name.toggleAttribute("data-letter-hover", index !== null);
-      domain.toggleAttribute("data-hovered", index === letters.length);
       letters.forEach((letter, i) => {
         const hovered = i === index;
-        letter.text.parentElement!.toggleAttribute("data-hovered", hovered);
         letter.glyph.toggleAttribute("data-hovered", hovered);
         const target = hovered ? 1 : 0;
         letter.control?.stop();
@@ -152,14 +133,6 @@ export function SignatureName() {
         }
       }
 
-      if (Number(getComputedStyle(domain.parentElement!).opacity) > 0) {
-        const bounds = domain.getBoundingClientRect();
-        if (x >= bounds.left && x <= bounds.right &&
-          y >= bounds.top + domainInk.top && y <= bounds.top + domainInk.bottom) {
-          activate(letters.length);
-          return;
-        }
-      }
       activate(null);
     };
     const reset = () => activate(null);
@@ -182,12 +155,9 @@ export function SignatureName() {
       observer.disconnect();
       finePointer.removeEventListener("change", reset);
       reducedMotion.removeEventListener("change", reset);
-      name.removeAttribute("data-letter-hover");
       name.removeAttribute("data-outline-ready");
-      domain.removeAttribute("data-hovered");
       letters.forEach(letter => {
         letter.control?.stop();
-        letter.text.parentElement!.removeAttribute("data-hovered");
         letter.glyph.removeAttribute("data-hovered");
       });
       selectLetter.current = () => {};
