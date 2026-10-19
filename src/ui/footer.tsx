@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { BadgeShelf } from "@/components/badge-shelf";
+import { BadgeShelf, BadgeToggle, useBadgeShelf } from "@/components/badge-shelf";
 import { useTheme } from "@/hooks/use-theme";
 
 const socialLinks = [
@@ -16,6 +16,7 @@ const socialLinks = [
 export function Footer() {
   const footerRef = useRef<HTMLElement>(null);
   const { theme } = useTheme();
+  const badgeShelf = useBadgeShelf();
   const reducedMotion = useReducedMotion();
   const [hoveredSocial, setHoveredSocial] = useState<string | null>(null);
   const [focusedSocial, setFocusedSocial] = useState<string | null>(null);
@@ -43,10 +44,15 @@ export function Footer() {
 
   return (
     <footer ref={footerRef} className="site-footer">
-      <div className="footer-start">
-        <BadgeShelf />
+      <div className="footer-start" onKeyDown={badgeShelf.handleKeyDown}>
+        <BadgeShelf state={badgeShelf} />
         <div className="footer-meta">
           <ThemeToggle />
+          <BadgeToggle
+            state={badgeShelf}
+            label="web badges"
+            className="badge-toggle footer-badge-toggle"
+          />
           <p>dundeezhang.com</p>
         </div>
       </div>
