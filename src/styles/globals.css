@@ -34,8 +34,6 @@
   --glass-bg: #f4f1eb;
   --glass-border: #e4dfd5;
   --glass-shadow: rgba(41, 38, 31, 0.06);
-  --overlay-edge: rgb(0 0 0 / 8%);
-  --overlay-shadow: linear-gradient(to top, rgb(0 0 0 / 11%), rgb(0 0 0 / 3%) 45%, transparent);
   --button-border: #dcd6cb;
   --accent: #a1482e;
   --accent-rgb: 161, 72, 46;
@@ -55,8 +53,6 @@
   --glass-bg: #252525;
   --glass-border: #393939;
   --glass-shadow: rgba(0, 0, 0, 0.12);
-  --overlay-edge: rgb(0 0 0 / 30%);
-  --overlay-shadow: linear-gradient(to top, rgb(0 0 0 / 32%), rgb(0 0 0 / 8%) 45%, transparent);
   --button-border: #434343;
   --accent: #b0b0b0;
   --accent-rgb: 176, 176, 176;
@@ -75,8 +71,6 @@
     --glass-bg: #252525;
     --glass-border: #393939;
     --glass-shadow: rgba(0, 0, 0, 0.12);
-    --overlay-edge: rgb(0 0 0 / 30%);
-    --overlay-shadow: linear-gradient(to top, rgb(0 0 0 / 32%), rgb(0 0 0 / 8%) 45%, transparent);
     --button-border: #434343;
     --accent: #b0b0b0;
     --accent-rgb: 176, 176, 176;
@@ -200,24 +194,6 @@ button:focus-visible {
   inset: 0 calc((100vw - 100%) / -2);
   background: var(--background);
   pointer-events: none;
-}
-
-.site-header::after {
-  content: "";
-  position: absolute;
-  inset: 100% -4px auto;
-  height: 5px;
-  border-bottom: 1px solid var(--overlay-edge);
-  background: var(--overlay-shadow);
-  /* Mirror the footer's upward shadow beneath the header. */
-  transform: scaleY(-1);
-  opacity: 0;
-  transition: opacity 160ms ease;
-  pointer-events: none;
-}
-
-.site-header[data-over-content="true"]::after {
-  opacity: 1;
 }
 
 .masthead {
@@ -514,22 +490,6 @@ html[data-signature-intro] .masthead-domain {
   background: var(--background);
   color: var(--muted);
   font-size: 1rem;
-}
-
-.site-footer::before {
-  content: "";
-  position: absolute;
-  inset: auto calc(max(var(--page-gutter), (100% - 80rem) / 2) - 4px) 100%;
-  height: 5px;
-  border-bottom: 1px solid var(--overlay-edge);
-  background: var(--overlay-shadow);
-  opacity: 0;
-  transition: opacity 160ms ease;
-  pointer-events: none;
-}
-
-.site-footer[data-over-content="true"]::before {
-  opacity: 1;
 }
 
 .footer-start {

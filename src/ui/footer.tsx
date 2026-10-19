@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { BadgeShelf } from "@/components/badge-shelf";
@@ -16,7 +15,6 @@ const socialLinks = [
 
 export function Footer() {
   const footerRef = useRef<HTMLElement>(null);
-  const pathname = usePathname();
   const { theme } = useTheme();
   const reducedMotion = useReducedMotion();
   const [hoveredSocial, setHoveredSocial] = useState<string | null>(null);
@@ -42,40 +40,6 @@ export function Footer() {
       root.style.removeProperty("--site-footer-height");
     };
   }, []);
-
-  useEffect(() => {
-    const footer = footerRef.current;
-    const content = document.querySelector("#main-content > .page-content");
-    if (!footer || !content) return;
-
-    let frame = 0;
-    const updateShadow = () => {
-      frame = 0;
-      const footerBounds = footer.getBoundingClientRect();
-      const contentBounds = content.getBoundingClientRect();
-      footer.dataset.overContent = String(
-        contentBounds.top < footerBounds.bottom && contentBounds.bottom > footerBounds.top,
-      );
-    };
-    const scheduleUpdate = () => {
-      if (!frame) frame = requestAnimationFrame(updateShadow);
-    };
-
-    const observer = new ResizeObserver(scheduleUpdate);
-    observer.observe(content);
-    observer.observe(footer);
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
-    scheduleUpdate();
-
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-      delete footer.dataset.overContent;
-    };
-  }, [pathname]);
 
   return (
     <footer ref={footerRef} className="site-footer">

@@ -118,40 +118,6 @@ export function SiteHeader({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  useEffect(() => {
-    const header = headerRef.current;
-    const content = document.querySelector("#main-content > .page-content");
-    if (!header || !content) return;
-
-    let frame = 0;
-    const updateShadow = () => {
-      frame = 0;
-      const headerBounds = header.getBoundingClientRect();
-      const contentBounds = content.getBoundingClientRect();
-      header.dataset.overContent = String(
-        contentBounds.top < headerBounds.bottom && contentBounds.bottom > headerBounds.top,
-      );
-    };
-    const scheduleUpdate = () => {
-      if (!frame) frame = requestAnimationFrame(updateShadow);
-    };
-
-    const observer = new ResizeObserver(scheduleUpdate);
-    observer.observe(content);
-    observer.observe(header);
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
-    scheduleUpdate();
-
-    return () => {
-      cancelAnimationFrame(frame);
-      observer.disconnect();
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-      delete header.dataset.overContent;
-    };
-  }, [pathname]);
-
   return (
     <>
       <div className="site-header-spacer" aria-hidden="true" />
