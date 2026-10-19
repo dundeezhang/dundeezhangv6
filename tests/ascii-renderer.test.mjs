@@ -7,7 +7,7 @@ const source = await readFile(new URL('../src/components/home/ascii-renderer.ts'
 const { outputText } = ts.transpileModule(source, { compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ES2022 } });
 const { createAsciiRenderer } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
 
-function environment() {
+function environment(sampleColor = [65, 130, 200]) {
   const saved = Object.fromEntries(['window', 'document', 'requestAnimationFrame', 'cancelAnimationFrame', 'ResizeObserver', 'IntersectionObserver'].map(key => [key, globalThis[key]]));
   const callbacks = new Map();
   const canvases = [];
@@ -35,14 +35,17 @@ function environment() {
         this.maxArea = Math.max(this.maxArea, area);
         if (args[7] < 8 && args[8] < 12) {
           this.glyphBlits++;
-          this.shifts.push({ x: args[5] - args[1], y: args[6] - args[2] });
+          this.shifts.push({
+            x: args[5] - args[1], y: args[6] - args[2],
+            originX: args[1] + args[3] / 2, originY: args[2] + args[4] / 2,
+          });
         }
       }
     }
     getImageData(_x, _y, width, height) {
       samples++;
       const data = new Uint8ClampedArray(width * height * 4);
-      for (let i = 0; i < data.length; i += 4) data.set([65, 130, 200, 255], i);
+      for (let i = 0; i < data.length; i += 4) data.set([...sampleColor, 255], i);
       return { data };
     }
   }
@@ -90,6 +93,8 @@ function environment() {
       history.push({
         glyphs: canvas.context.glyphBlits,
         maxShift: Math.max(0, ...canvas.context.shifts.map(shift => Math.hypot(shift.x, shift.y))),
+        minShiftX: Math.min(0, ...canvas.context.shifts.map(shift => shift.x)),
+        maxShiftX: Math.max(0, ...canvas.context.shifts.map(shift => shift.x)),
       });
       frames++;
     }
@@ -119,7 +124,7 @@ test('artwork is cached across photo toggles and theme switches, keeping origina
     env.renderer.update({ active: true, theme: 'light' });
     env.flush();
     assert.equal(env.samples, 1);
-    assert.ok(env.canvases.some(canvas => canvas.context.colors.has('rgb(65,130,200)')));
+    assert.ok(env.canvases.at(-1).context.colors.has('rgb(65,130,200)'));
     env.renderer.update({ active: false, theme: 'light' });
     env.renderer.update({ active: true, theme: 'light' });
     env.flush();
@@ -134,6 +139,29 @@ test('artwork is cached across photo toggles and theme switches, keeping origina
   } finally { env.dispose(); }
 });
 
+test('dark colors keep their hue while gaining brightness and saturation', () => {
+  for (const original of [[65, 130, 200], [155, 143, 121], [110, 110, 110], [20, 40, 15]]) {
+    const env = environment(original);
+    try {
+      env.renderer.update({ active: true, theme: 'dark' });
+      env.flush();
+      const color = [...env.canvases.at(-1).context.colors][0];
+      const adjusted = color.match(/\d+/g).map(Number);
+      const source = [...original].sort((a, b) => a - b);
+      const result = [...adjusted].sort((a, b) => a - b);
+      assert.ok(result[2] > source[2], 'the palette is brighter on a dark background');
+      if (source[2] === source[0]) {
+        assert.equal(result[0], result[2], 'neutral granite stays neutral');
+      } else {
+        assert.ok(result[2] - result[0] > source[2] - source[0], 'colors gain vibrancy rather than a white wash');
+        assert.ok(Math.abs((result[1] - result[0]) / (result[2] - result[0])
+          - (source[1] - source[0]) / (source[2] - source[0])) < 0.025, 'the source hue is preserved');
+        assert.equal(adjusted.indexOf(Math.max(...adjusted)), original.indexOf(Math.max(...original)));
+      }
+    } finally { env.dispose(); }
+  }
+});
+
 test('cursor movement uses cached glyph pixels, repaints locally, and sleeps when settled', () => {
   const env = environment();
   try {
@@ -142,8 +170,8 @@ test('cursor movement uses cached glyph pixels, repaints locally, and sleeps whe
     env.move(600, 320);
     env.flush();
     env.move(640, 320);
-    const frames = env.flush(600);
-    assert.ok(frames > 10 && frames < 600, `stationary cursor should settle; ran ${frames} frames`);
+    const frames = env.flush(60);
+    assert.ok(frames > 10 && frames < 60, `stationary cursor should settle in under a second; ran ${frames} frames`);
     assert.equal(env.pendingFrames, 0);
     assert.equal(env.canvas.context.textCalls, 0, 'animated frames never shape text');
     assert.ok(env.canvas.context.maxArea < 1280 * 640 * 0.05, 'the brush repaint stays compact');
@@ -156,7 +184,7 @@ test('cursor movement uses cached glyph pixels, repaints locally, and sleeps whe
   } finally { env.dispose(); }
 });
 
-test('characters follow cursor direction and stay within a small displacement', () => {
+test('characters follow cursor direction with visible, bounded displacement', () => {
   const env = environment();
   try {
     env.renderer.update({ active: true, theme: 'light' });
@@ -168,6 +196,8 @@ test('characters follow cursor direction and stay within a small displacement', 
     env.flush();
     assert.ok(env.canvas.context.shifts.length > 0);
     assert.ok(env.canvas.context.shifts.every(shift => shift.x > 0 && Math.abs(shift.y) < 0.001), 'a rightward stroke moves characters right, not radially');
+    const shifts = env.canvas.context.shifts;
+    assert.ok(shifts.every(shift => Math.abs(shift.originY - 320) < 24), 'the restored stroke stays narrow across the cursor path');
 
     env.leave();
     env.flush(600);
@@ -181,8 +211,35 @@ test('characters follow cursor direction and stay within a small displacement', 
       env.move(index % 2 ? 560 : 720, 320);
       env.flush();
     }
-    assert.ok(Math.max(...env.history.map(frame => frame.maxShift)) <= 12.001, 'fast sweeps cannot stretch a large hole');
+    const maxShift = Math.max(...env.history.map(frame => frame.maxShift));
+    assert.ok(maxShift > 16, `fast sweeps visibly shift several letters; reached ${maxShift}px`);
+    assert.ok(maxShift <= 40.001, 'fast sweeps stay within a bounded, directional stroke');
   } finally { env.dispose(); }
+});
+
+test('letters nudge, rebound once, and settle in under a second', () => {
+  for (const theme of ['light', 'dark']) {
+    const env = environment();
+    try {
+      env.renderer.update({ active: true, theme });
+      env.flush();
+      env.move(600, 320);
+      env.flush();
+      env.move(640, 320);
+      env.flush();
+      env.leave();
+      env.flush(60);
+      assert.ok(Math.max(...env.history.map(frame => frame.maxShift)) > 12, `${theme}: the initial nudge remains visible`);
+      const phases = [];
+      for (const frame of env.history) {
+        const direction = frame.minShiftX < -0.75 ? -1 : frame.maxShiftX > 0.75 ? 1 : 0;
+        if (direction && direction !== phases.at(-1)) phases.push(direction);
+      }
+      assert.deepEqual(phases, [1, -1], `${theme}: one visible rebound without repeated jiggles`);
+      assert.equal(env.pendingFrames, 0, `${theme}: animation sleeps within one second`);
+      assert.equal(env.history.at(-1).glyphs, 0, `${theme}: all displaced letters return`);
+    } finally { env.dispose(); }
+  }
 });
 
 test('hidden, disabled, and reduced-motion artwork does no animation work', () => {

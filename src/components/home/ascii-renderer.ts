@@ -153,13 +153,21 @@ export function createAsciiRenderer(
           const lightBrightness = Math.min(1, Math.max(0, (brightness - 0.16) / 0.68));
           const density = bold ? 1 - lightBrightness : brightness;
           const glyph = glyphs[Math.round(density * (glyphs.length - 1))];
-          const lift = bold ? 0 : Math.max(0, (0.56 - brightness) / Math.max(1 - brightness, 0.001));
-          const channel = (value: number) => Math.round(value + (255 - value) * lift);
-          const color = `rgb(${channel(red)},${channel(green)},${channel(blue)})`;
           const x = (column + 0.5) * cellWidth;
           const y = (row + 0.5) * cellHeight;
           characters.push({ originX: x, originY: y, x, y, vx: 0, vy: 0, glyph });
           if (glyph === " ") continue;
+          let color = `rgb(${red},${green},${blue})`;
+          if (!bold) {
+            // Brighten dark-mode colors without mixing white into their hues.
+            const peak = Math.max(red, green, blue);
+            const trough = Math.min(red, green, blue);
+            const saturation = peak === trough ? 1 : Math.min(1.18, peak / (peak - trough));
+            const darkPeak = Math.min(255, (0.16 + 0.84 * Math.pow(peak / 255, 0.78)) * 255 * 1.12);
+            const gain = peak ? darkPeak / peak : 0;
+            const channel = (value: number) => Math.round(Math.max(0, Math.min(255, (peak - (peak - value) * saturation) * gain)));
+            color = `rgb(${channel(red)},${channel(green)},${channel(blue)})`;
+          }
           stillContext.fillStyle = color;
           stillContext.fillText(glyph, x, y);
           if (bold) {
@@ -192,10 +200,11 @@ export function createAsciiRenderer(
     if (!artwork || !active || !inViewport || document.hidden || motion.matches) return;
     const step = previousTime ? Math.min((time - previousTime) / (1000 / 60), 2) : 1;
     previousTime = time;
-    const damping = Math.pow(0.8, step);
-    const spring = 0.055 * step;
-    const brushRadius = Math.min(44, Math.max(24, width * 0.034));
-    const maxShift = Math.min(12, Math.max(7, width * 0.01));
+    // Strong damping gives the nudge one quick rebound before settling.
+    const damping = Math.pow(0.76, step);
+    const spring = 0.085 * step;
+    const brushRadius = Math.min(36, Math.max(20, width * 0.028));
+    const maxShift = Math.min(40, Math.max(24, width * 0.033));
     const { characters, cellWidth, cellHeight } = artwork;
     let fromX = pointer.x;
     let fromY = pointer.y;
@@ -219,7 +228,7 @@ export function createAsciiRenderer(
       pointer.changed = false;
       moved = dx !== 0 || dy !== 0;
     } else {
-      const fade = Math.pow(0.72, step);
+      const fade = Math.pow(0.55, step);
       pointer.flowX *= fade;
       pointer.flowY *= fade;
     }
@@ -227,13 +236,18 @@ export function createAsciiRenderer(
     const pathX = pointer.x - fromX;
     const pathY = pointer.y - fromY;
     const pathLengthSquared = pathX * pathX + pathY * pathY;
+    const flowLength = Math.hypot(pointer.flowX, pointer.flowY);
+    const directionX = flowLength ? pointer.flowX / flowLength : 1;
+    const directionY = flowLength ? pointer.flowY / flowLength : 0;
     const distanceToBrush = (x: number, y: number) => {
       const along = pathLengthSquared
         ? Math.min(1, Math.max(0, ((x - fromX) * pathX + (y - fromY) * pathY) / pathLengthSquared))
         : 0;
       const dx = x - (fromX + pathX * along);
       const dy = y - (fromY + pathY * along);
-      return dx * dx + dy * dy;
+      const distance = Math.abs(dx * directionX + dy * directionY)
+        + Math.abs(dy * directionX - dx * directionY) * 1.6;
+      return distance * distance;
     };
 
     if (moved) {
@@ -268,7 +282,7 @@ export function createAsciiRenderer(
         const distanceSquared = distanceToBrush(character.x, character.y);
         if (distanceSquared < brushRadius * brushRadius) {
           const falloff = 1 - Math.sqrt(distanceSquared) / brushRadius;
-          const drag = falloff * falloff * 0.144 * step;
+          const drag = falloff * falloff * 0.6 * step;
           character.vx += pointer.flowX * drag;
           character.vy += pointer.flowY * drag;
         }
