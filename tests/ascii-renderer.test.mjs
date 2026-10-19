@@ -14,6 +14,7 @@ function environment(sampleColor = [65, 130, 200]) {
   let nextId = 0;
   let time = 0;
   let samples = 0;
+  let readyCalls = 0;
   let resizeObserver;
   let intersectionObserver;
   const media = Object.assign(new EventTarget(), { matches: false });
@@ -79,7 +80,10 @@ function environment(sampleColor = [65, 130, 200]) {
     observe() { this.callback([{ isIntersecting: true }]); }
     disconnect() { this.disconnected = true; }
   };
-  const renderer = createAsciiRenderer(frame, canvas, image);
+  const renderer = createAsciiRenderer(frame, canvas, image, () => {
+    assert.ok(canvas.context.blits > 0, 'readiness follows the completed canvas draw');
+    readyCalls++;
+  });
   const history = [];
   function flush(limit = 1) {
     let frames = 0;
@@ -101,8 +105,9 @@ function environment(sampleColor = [65, 130, 200]) {
     return frames;
   }
   return {
-    renderer, frame, canvas, media, canvases, history,
+    renderer, frame, canvas, image, media, canvases, history,
     get samples() { return samples; },
+    get readyCalls() { return readyCalls; },
     get pendingFrames() { return callbacks.size; },
     flush,
     move(x = 640, y = 320) { frame.dispatchEvent(Object.assign(new Event('pointermove'), { clientX: x, clientY: y, pointerType: 'mouse' })); },
@@ -117,6 +122,32 @@ function environment(sampleColor = [65, 130, 200]) {
     },
   };
 }
+
+test('readiness waits for loaded pixels and a visible canvas, then fires once', () => {
+  const env = environment();
+  try {
+    env.image.complete = false;
+    env.image.naturalWidth = 0;
+    env.renderer.update({ active: true, theme: 'light' });
+    env.flush();
+    assert.equal(env.readyCalls, 0, 'an unfinished image cannot reveal the canvas');
+    env.visible(false);
+    env.image.complete = true;
+    env.image.naturalWidth = 480;
+    env.image.dispatchEvent(new Event('load'));
+    env.flush();
+    assert.equal(env.readyCalls, 0, 'offscreen artwork is not ready before it is drawn');
+    env.visible(true);
+    env.flush();
+    assert.equal(env.readyCalls, 1);
+    env.renderer.update({ active: false, theme: 'light' });
+    env.renderer.update({ active: true, theme: 'light' });
+    env.flush();
+    env.renderer.update({ active: true, theme: 'dark' });
+    env.flush();
+    assert.equal(env.readyCalls, 1, 'cached toggles and theme changes do not restart initial readiness');
+  } finally { env.dispose(); }
+});
 
 test('artwork is cached across photo toggles and theme switches, keeping original light colors', () => {
   const env = environment();

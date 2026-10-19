@@ -7,7 +7,9 @@ import photographyData from "@/data/photography.json";
 import type { Photo } from "@/types";
 import "@/styles/photography.css";
 
-const photos = photographyData satisfies Photo[];
+const photos = [...photographyData].sort((a, b) =>
+  b.takenAt.localeCompare(a.takenAt),
+) satisfies Photo[];
 
 export function PhotographyGallery() {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
@@ -60,7 +62,9 @@ export function PhotographyGallery() {
             </button>
             <figcaption className="photography-caption">
               <span>{photo.name}</span>
-              <span className="photography-date">{photo.date}</span>
+              <time className="photography-date" dateTime={photo.takenAt}>
+                {photo.date}
+              </time>
             </figcaption>
           </figure>
         ))}
@@ -110,7 +114,9 @@ export function PhotographyGallery() {
             />
             <figcaption className="photo-lightbox-caption" aria-live="polite">
               <span id="photo-lightbox-title">{activePhoto.name}</span>
-              <span className="photo-lightbox-date">{activePhoto.date}</span>
+              <time className="photo-lightbox-date" dateTime={activePhoto.takenAt}>
+                {activePhoto.date}
+              </time>
               <span className="photo-lightbox-counter">
                 {activeIndex + 1} / {photos.length}
               </span>

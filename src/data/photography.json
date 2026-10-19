@@ -1,135 +1,314 @@
 [
   {
+    "src": "/images/photography/2026-10-13-oshawa-sunset.webp",
+    "name": "Oshawa Sunset",
+    "date": "October 13, 2026",
+    "takenAt": "2026-10-13T18:17:30",
+    "width": 1920,
+    "height": 1440
+  },
+  {
+    "src": "/images/photography/2026-10-11-saint-irenee-shore.webp",
+    "name": "Saint-Irénée Shore",
+    "date": "October 11, 2026",
+    "takenAt": "2026-10-11T15:51:33",
+    "width": 1440,
+    "height": 1920
+  },
+  {
+    "src": "/images/photography/2026-10-11-saint-irenee-beach.webp",
+    "name": "Saint-Irénée Beach",
+    "date": "October 11, 2026",
+    "takenAt": "2026-10-11T15:48:27",
+    "width": 1920,
+    "height": 1152
+  },
+  {
+    "src": "/images/photography/2026-10-11-saint-irenee-railway.webp",
+    "name": "Saint-Irénée Railway",
+    "date": "October 11, 2026",
+    "takenAt": "2026-10-11T15:47:13",
+    "width": 1152,
+    "height": 1920
+  },
+  {
+    "src": "/images/photography/2026-10-11-denim.webp",
+    "name": "Denim",
+    "date": "October 11, 2026",
+    "takenAt": "2026-10-11T14:15:10",
+    "width": 1440,
+    "height": 1920
+  },
+  {
+    "src": "/images/photography/2026-10-11-sainte-anne-in-autumn.webp",
+    "name": "Sainte-Anne in Autumn",
+    "date": "October 11, 2026",
+    "takenAt": "2026-10-11T13:50:33",
+    "width": 1200,
+    "height": 1600
+  },
+  {
+    "src": "/images/photography/2026-10-11-sainte-anne-de-beaupre.webp",
+    "name": "Sainte-Anne-de-Beaupré",
+    "date": "October 11, 2026",
+    "takenAt": "2026-10-11T13:28:06",
+    "width": 1920,
+    "height": 1440
+  },
+  {
+    "src": "/images/photography/2026-10-11-pont-mcnicoll.webp",
+    "name": "Pont McNicoll",
+    "date": "October 11, 2026",
+    "takenAt": "2026-10-11T10:47:17",
+    "width": 1152,
+    "height": 1920
+  },
+  {
+    "src": "/images/photography/2026-10-11-canyon-sainte-anne-bridge.webp",
+    "name": "Canyon Sainte-Anne Bridge",
+    "date": "October 11, 2026",
+    "takenAt": "2026-10-11T10:39:51",
+    "width": 1440,
+    "height": 1920
+  },
+  {
+    "src": "/images/photography/2026-10-11-quebec-city-skyline.webp",
+    "name": "Québec City Skyline",
+    "date": "October 11, 2026",
+    "takenAt": "2026-10-11T10:01:06",
+    "width": 1152,
+    "height": 1920
+  },
+  {
+    "src": "/images/photography/2026-06-30-toronto-skyview.webp",
+    "name": "Toronto Skyview",
+    "date": "June 30, 2026",
+    "takenAt": "2026-06-30T12:57:41",
+    "width": 1440,
+    "height": 1920
+  },
+  {
+    "src": "/images/photography/2026-05-18-bright-sutro-tower.webp",
+    "name": "Bright Sutro Tower",
+    "date": "May 18, 2026",
+    "takenAt": "2026-05-18T09:20:21",
+    "width": 1440,
+    "height": 1920
+  },
+  {
+    "src": "/images/photography/2026-04-28-point-lobos.webp",
+    "name": "Point Lobos",
+    "date": "April 28, 2026",
+    "takenAt": "2026-04-28T13:04:55",
+    "width": 1600,
+    "height": 1200
+  },
+  {
+    "src": "/images/photography/2026-04-27-bixby-bridge.webp",
+    "name": "Bixby Bridge",
+    "date": "April 27, 2026",
+    "takenAt": "2026-04-27T19:31:37",
+    "width": 1440,
+    "height": 1920
+  },
+  {
+    "src": "/images/photography/2026-04-25-golden-gate-bridge.webp",
+    "name": "Golden Gate Bridge",
+    "date": "April 25, 2026",
+    "takenAt": "2026-04-25T20:44:39",
+    "width": 1371,
+    "height": 1920
+  },
+  {
+    "src": "/images/photography/2026-04-03-half-dome.webp",
+    "name": "Half Dome",
+    "date": "April 3, 2026",
+    "takenAt": "2026-04-03T16:08:44",
+    "width": 1920,
+    "height": 1440
+  },
+  {
+    "src": "/images/photography/2026-04-03-yosemite-falls.webp",
+    "name": "Yosemite Falls",
+    "date": "April 3, 2026",
+    "takenAt": "2026-04-03T14:08:23",
+    "width": 1920,
+    "height": 1440
+  },
+  {
+    "src": "/images/photography/2026-04-03-el-capitan.webp",
+    "name": "El Capitan",
+    "date": "April 3, 2026",
+    "takenAt": "2026-04-03T14:06:08",
+    "width": 1920,
+    "height": 1440
+  },
+  {
     "src": "/images/photography/Golden Gate Bridge - March 2026.webp",
     "name": "Golden Gate Bridge",
     "date": "March 2026",
     "width": 3024,
-    "height": 4032
+    "height": 4032,
+    "takenAt": "2026-03"
   },
   {
     "src": "/images/photography/Palace of Fine Arts - March 2026.webp",
     "name": "Palace of Fine Arts",
     "date": "March 2026",
     "width": 2644,
-    "height": 2644
+    "height": 2644,
+    "takenAt": "2026-03"
   },
   {
     "src": "/images/photography/Presidio - March 2026.webp",
     "name": "Presidio",
     "date": "March 2026",
     "width": 3024,
-    "height": 4032
+    "height": 4032,
+    "takenAt": "2026-03"
+  },
+  {
+    "src": "/images/photography/2026-02-13-sutro-tower.webp",
+    "name": "Sutro Tower",
+    "date": "February 13, 2026",
+    "takenAt": "2026-02-13T16:54:43",
+    "width": 1440,
+    "height": 1920
   },
   {
     "src": "/images/photography/Point Bonita Shore - January 2026.webp",
     "name": "Point Bonita Shore",
     "date": "January 2026",
     "width": 1440,
-    "height": 1920
+    "height": 1920,
+    "takenAt": "2026-01"
   },
   {
     "src": "/images/photography/Point Bonita - January 2026.webp",
     "name": "Point Bonita",
     "date": "January 2026",
     "width": 1920,
-    "height": 1440
+    "height": 1440,
+    "takenAt": "2026-01"
   },
   {
     "src": "/images/photography/Golden Gate Bridge - January 2026.webp",
     "name": "Golden Gate Bridge",
     "date": "January 2026",
     "width": 1920,
-    "height": 1440
+    "height": 1440,
+    "takenAt": "2026-01"
   },
   {
     "src": "/images/photography/China Town - January 2026.webp",
     "name": "China Town",
     "date": "January 2026",
     "width": 1440,
-    "height": 1920
+    "height": 1920,
+    "takenAt": "2026-01"
   },
   {
     "src": "/images/photography/China Town Gate - January 2026.webp",
     "name": "China Town Gate",
     "date": "January 2026",
     "width": 1440,
-    "height": 1920
+    "height": 1920,
+    "takenAt": "2026-01"
   },
   {
     "src": "/images/photography/Ferry Building - January 2026.webp",
     "name": "Ferry Building",
     "date": "January 2026",
     "width": 3024,
-    "height": 4032
+    "height": 4032,
+    "takenAt": "2026-01"
   },
   {
     "src": "/images/photography/Red Rock Canyon - December 2025.webp",
     "name": "Red Rock Canyon",
     "date": "December 2025",
     "width": 1920,
-    "height": 1440
+    "height": 1440,
+    "takenAt": "2025-12"
+  },
+  {
+    "src": "/images/photography/2025-11-30-mathematics-and-computer-building.webp",
+    "name": "Mathematics and Computer Building",
+    "date": "November 30, 2025",
+    "takenAt": "2025-11-30T19:30:16",
+    "width": 1440,
+    "height": 1920
   },
   {
     "src": "/images/photography/Dundas Night - October 2025.webp",
     "name": "Dundas Night",
     "date": "October 2025",
     "width": 1280,
-    "height": 1920
+    "height": 1920,
+    "takenAt": "2025-10"
   },
   {
     "src": "/images/photography/Cotton Looking at the Fall Leaves - October 2025.webp",
     "name": "Cotton Looking at the Fall Leaves",
     "date": "October 2025",
     "width": 2306,
-    "height": 1845
+    "height": 1845,
+    "takenAt": "2025-10"
   },
   {
     "src": "/images/photography/Rip Super Chicken - September 2025.webp",
     "name": "Rip Super Chicken",
     "date": "September 2025",
     "width": 2344,
-    "height": 3516
+    "height": 3516,
+    "takenAt": "2025-09"
   },
   {
     "src": "/images/photography/Ayushs Miata - September 2025.webp",
     "name": "Ayush's Second Miata",
     "date": "September 2025",
     "width": 1280,
-    "height": 1920
+    "height": 1920,
+    "takenAt": "2025-09"
   },
   {
     "src": "/images/photography/Park - August 2025.webp",
     "name": "Park",
     "date": "August 2025",
     "width": 1280,
-    "height": 1920
+    "height": 1920,
+    "takenAt": "2025-08"
   },
   {
     "src": "/images/photography/Google Office - July 2025.webp",
     "name": "Google Office",
     "date": "July 2025",
     "width": 1814,
-    "height": 2267
+    "height": 2267,
+    "takenAt": "2025-07"
   },
   {
     "src": "/images/photography/Wilcox Geese - June 2025.webp",
     "name": "Wilcox Geese",
     "date": "June 2025",
     "width": 1920,
-    "height": 1440
+    "height": 1440,
+    "takenAt": "2025-06"
   },
   {
     "src": "/images/photography/Fresh Paint - December 2024.webp",
     "name": "Fresh Paint",
     "date": "December 2024",
     "width": 1158,
-    "height": 1158
+    "height": 1158,
+    "takenAt": "2024-12"
   },
   {
     "src": "/images/photography/Maximum 40 - December 2024.webp",
     "name": "Maximum 40",
     "date": "December 2024",
     "width": 2116,
-    "height": 3174
+    "height": 3174,
+    "takenAt": "2024-12"
   }
 ]

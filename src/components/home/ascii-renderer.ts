@@ -31,6 +31,7 @@ export function createAsciiRenderer(
   frame: HTMLDivElement,
   canvas: HTMLCanvasElement,
   image: HTMLImageElement,
+  onReady?: () => void,
 ): AsciiRenderer {
   const context = canvas.getContext("2d");
   const sample = document.createElement("canvas");
@@ -58,6 +59,7 @@ export function createAsciiRenderer(
   let previousTime = 0;
   let settledFrames = 0;
   let previousBounds: Bounds | undefined;
+  let ready = false;
 
   function drawStill() {
     if (!artwork) return;
@@ -181,6 +183,10 @@ export function createAsciiRenderer(
     }
     context!.setTransform(ratio, 0, 0, ratio, 0, 0);
     drawStill();
+    if (!ready) {
+      ready = true;
+      onReady?.();
+    }
   }
 
   function queueBuild() {

@@ -13,14 +13,21 @@ export default function HomeBanner() {
   const { theme, isLoaded } = useTheme();
   const [ascii, setAscii] = useState(true);
   const [photoRequested, setPhotoRequested] = useState(false);
+  const [asciiReady, setAsciiReady] = useState(false);
+  const [photoReady, setPhotoReady] = useState(false);
   const frameRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rendererRef = useRef<AsciiRenderer | null>(null);
+  const showingAscii = asciiReady && (ascii || !photoReady);
+  const showingPhoto = photoReady && (!ascii || !asciiReady);
 
   useEffect(() => {
     if (!frameRef.current || !imageRef.current || !canvasRef.current) return;
-    const renderer = createAsciiRenderer(frameRef.current, canvasRef.current, imageRef.current);
+    const renderer = createAsciiRenderer(
+      frameRef.current, canvasRef.current, imageRef.current,
+      () => setAsciiReady(true),
+    );
     rendererRef.current = renderer;
     return () => {
       renderer.destroy();
@@ -29,12 +36,12 @@ export default function HomeBanner() {
   }, []);
 
   useEffect(() => {
-    rendererRef.current?.update({ active: ascii && isLoaded, theme });
-  }, [ascii, theme, isLoaded]);
+    rendererRef.current?.update({ active: (ascii || !photoReady) && isLoaded, theme });
+  }, [ascii, photoReady, theme, isLoaded]);
 
   return (
     <figure className={styles.figure}>
-      <div ref={frameRef} className={styles.banner}>
+      <div ref={frameRef} className={styles.banner} aria-busy={ascii ? !asciiReady : !photoReady}>
         <Image
           ref={imageRef}
           src={homeBannerPreview}
@@ -49,11 +56,13 @@ export default function HomeBanner() {
           <Image
             src={homeBanner}
             alt="Granite cliffs beneath a clear blue sky"
-            aria-hidden={ascii}
+            aria-hidden={!showingPhoto}
             fill
             sizes="(min-width: 1440px) 1280px, 90vw"
             className={styles.image}
+            data-visible={showingPhoto}
             loading="eager"
+            onLoad={() => setPhotoReady(true)}
           />
         )}
         <canvas
@@ -62,7 +71,8 @@ export default function HomeBanner() {
           className={styles.ascii}
           role="img"
           aria-label="Colored ASCII art of Half Dome"
-          hidden={!ascii}
+          aria-hidden={!showingAscii}
+          data-visible={showingAscii}
         />
       </div>
       <figcaption className={styles.caption}>
