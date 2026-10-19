@@ -27,19 +27,14 @@ export function ExperienceIndex() {
             {title}
           </h2>
           <ul className="index-list">
-            {entries.map(({ id, company, href, role, period, details, context }) => (
+            {entries.map(({ id, company, href, role, period, description, context }) => (
               <IndexDisclosure
                 key={id}
                 label={`${company}, ${role}`}
                 details={(
                   <>
                     <p className="experience-role-detail"><strong>{role}</strong></p>
-                    {details.map(({ label, text }) => (
-                      <p key={label || text}>
-                        {label && <strong>{label}. </strong>}
-                        {text}
-                      </p>
-                    ))}
+                    <p>{description}</p>
                     <p className="index-detail-links">
                       <a href={href} target="_blank" rel="noopener noreferrer">
                         {context === "Leadership"
@@ -56,11 +51,9 @@ export function ExperienceIndex() {
                     {company.replace(/^Waterloo\b/, "UW")}
                   </span>
                 </span>
-                {period && (
-                  <span className="index-meta">
-                    {context === "Current" ? "Present" : formatYears(period)}
-                  </span>
-                )}
+                <span className="index-meta">
+                  {context === "Current" ? "Present" : formatYears(period)}
+                </span>
                 <span className="index-role">{role}</span>
               </IndexDisclosure>
             ))}
