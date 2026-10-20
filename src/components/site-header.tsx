@@ -5,6 +5,9 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { animate } from "motion/react";
 
+// The mobile webring fades out over this much of the header's progress (see globals.css).
+const utilityFadeEnd = 0.25;
+
 export function SiteHeader({ children }: { children: ReactNode }) {
   const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
@@ -38,6 +41,7 @@ export function SiteHeader({ children }: { children: ReactNode }) {
       if (progress === previousProgress) return;
       previousProgress = progress;
       header.style.setProperty("--header-progress", String(progress));
+      header.toggleAttribute("data-utility-hidden", progress >= utilityFadeEnd);
     };
     const update = () => {
       frame = 0;
@@ -67,14 +71,9 @@ export function SiteHeader({ children }: { children: ReactNode }) {
     const measure = () => {
       root.style.setProperty("--site-header-height", `${header.getBoundingClientRect().height}px`);
     };
-    // Unlike the eased progress, any scroll at all counts here.
-    const markScrolled = () => {
-      header.toggleAttribute("data-scrolled", window.scrollY > 0);
-    };
 
     update();
     measure();
-    markScrolled();
     transitionOnNavigation.current = () => {
       cancelAnimationFrame(frame);
       transition?.stop();
@@ -104,7 +103,6 @@ export function SiteHeader({ children }: { children: ReactNode }) {
     const observer = new ResizeObserver(measure);
     observer.observe(header);
     window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("scroll", markScrolled, { passive: true });
     window.addEventListener("wheel", interruptTransition, { passive: true });
     window.addEventListener("touchstart", interruptTransition, { passive: true });
     window.addEventListener("keydown", onScrollKey);
@@ -116,7 +114,6 @@ export function SiteHeader({ children }: { children: ReactNode }) {
       transitionOnNavigation.current = () => {};
       observer.disconnect();
       window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("scroll", markScrolled);
       window.removeEventListener("wheel", interruptTransition);
       window.removeEventListener("touchstart", interruptTransition);
       window.removeEventListener("keydown", onScrollKey);
