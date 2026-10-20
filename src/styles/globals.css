@@ -951,24 +951,23 @@ a.index-name:hover {
     --header-full-nav-gap: 1rem;
   }
 
-  .site-header {
-    --header-top: calc(var(--header-full-top) * (1 - var(--header-progress)) + 3rem * var(--header-progress));
-  }
-
   .masthead {
     font-size: var(--masthead-full-size);
   }
 
   .header-utility {
-    top: calc(1.5rem * (1 - var(--header-progress)) + 0.375rem * var(--header-progress));
     transition: opacity 160ms ease, visibility 0s;
   }
 
-  /* The webring only shows while the page sits at the very top. */
+  /*
+   * The webring only shows while the page sits at the very top, so the compact
+   * masthead can rise to the same 1rem top as on desktop. It leaves at once rather
+   * than fading, so a quick scroll can't carry the masthead into it.
+   */
   .site-header[data-scrolled] .header-utility {
     opacity: 0;
     visibility: hidden;
-    transition: opacity 160ms ease, visibility 0s linear 160ms;
+    transition: none;
   }
 }
 
