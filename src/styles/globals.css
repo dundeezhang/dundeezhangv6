@@ -798,24 +798,21 @@ html[data-signature-intro] .masthead-domain {
     --header-full-nav-gap: 1rem;
   }
 
-  .site-header {
-    --header-top: calc(var(--header-full-top) * (1 - var(--header-progress)) + 3rem * var(--header-progress));
-  }
-
   .masthead {
     font-size: var(--masthead-full-size);
   }
 
+  /*
+   * The webring fades with the header's scroll progress and is gone a quarter of the
+   * way in (utilityFadeEnd in site-header.tsx), before the rising masthead reaches it.
+   * That frees its space, so the compact masthead takes the same 1rem top as desktop.
+   */
   .header-utility {
-    top: calc(1.5rem * (1 - var(--header-progress)) + 0.375rem * var(--header-progress));
-    transition: opacity 160ms ease, visibility 0s;
+    opacity: calc(1 - var(--header-progress) / 0.25);
   }
 
-  /* The webring only shows while the page sits at the very top. */
-  .site-header[data-scrolled] .header-utility {
-    opacity: 0;
+  .site-header[data-utility-hidden] .header-utility {
     visibility: hidden;
-    transition: opacity 160ms ease, visibility 0s linear 160ms;
   }
 }
 
