@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://www.dundeezhang.com/sitemap.xml
+Sitemap: https://dundeezhang.com/sitemap.xml
 
 # Block AI training crawlers (using standard User-agent directives)
 User-agent: GPTBot
