@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { BadgeShelf } from "@/components/badge-shelf";
+import { BadgeShelf, BadgeToggle, useBadgeShelf } from "@/components/badge-shelf";
 import { FadeLinks, type FadeLink } from "@/components/fade-links";
 
 const newTab = { target: "_blank", rel: "noopener noreferrer" };
@@ -16,6 +16,7 @@ const socialLinks: FadeLink[] = [
 
 export function Footer() {
   const footerRef = useRef<HTMLElement>(null);
+  const badgeShelf = useBadgeShelf();
 
   useEffect(() => {
     const footer = footerRef.current;
@@ -38,10 +39,15 @@ export function Footer() {
 
   return (
     <footer ref={footerRef} className="site-footer">
-      <div className="footer-start">
-        <BadgeShelf />
+      <div className="footer-start" onKeyDown={badgeShelf.handleKeyDown}>
+        <BadgeShelf state={badgeShelf} />
         <div className="footer-meta">
           <ThemeToggle />
+          <BadgeToggle
+            state={badgeShelf}
+            label="web badges"
+            className="badge-toggle footer-badge-toggle"
+          />
           <p>dundeezhang.com</p>
         </div>
       </div>

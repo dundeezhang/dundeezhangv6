@@ -25,15 +25,19 @@ const openSans = Open_Sans({
   preload: true,
 });
 
+const title = "Dundee Zhang";
+const description =
+  "Dundee Zhang's portfolio. View my projects and other works! Love from Toronto.";
+const previewImage = "/card-preview-v6.jpeg";
+
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NODE_ENV === "production"
       ? "https://dundeezhang.com"
       : "http://localhost:3000",
   ),
-  title: "Dundee Zhang",
-  description:
-    "Dundee Zhang's portfolio. View my projects and other works! Love from Toronto.",
+  title,
+  description,
   icons: {
     icon: [
       { url: "/favicon.ico" },
@@ -44,12 +48,11 @@ export const metadata: Metadata = {
   },
   manifest: "/site.webmanifest",
   openGraph: {
-    title: "Dundee Zhang",
-    description:
-      "Dundee Zhang's portfolio. View my projects and other works! Love from Toronto.",
+    title,
+    description,
     images: [
       {
-        url: "/card-preview-v6.jpeg",
+        url: previewImage,
         width: 1200,
         height: 630,
         alt: "Dundee Zhang's homepage with a Garamond signature and colored ASCII art of Half Dome",
@@ -58,10 +61,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Dundee Zhang",
-    description:
-      "Dundee Zhang's portfolio. View my projects and other works! Love from Toronto.",
-    images: ["/card-preview-v6.jpeg"],
+    title,
+    description,
+    images: [previewImage],
   },
 };
 

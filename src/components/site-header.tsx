@@ -5,6 +5,9 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { animate } from "motion/react";
 
+// The mobile webring fades out over this much of the header's progress (see globals.css).
+const utilityFadeEnd = 0.25;
+
 export function SiteHeader({ children }: { children: ReactNode }) {
   const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
@@ -38,6 +41,7 @@ export function SiteHeader({ children }: { children: ReactNode }) {
       if (progress === previousProgress) return;
       previousProgress = progress;
       header.style.setProperty("--header-progress", String(progress));
+      header.toggleAttribute("data-utility-hidden", progress >= utilityFadeEnd);
     };
     const update = () => {
       frame = 0;

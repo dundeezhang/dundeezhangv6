@@ -3,7 +3,6 @@
 import { Sun, Moon } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useTheme } from "@/hooks/use-theme";
-import { DEFAULT_ICON_SIZE } from "@/constants/icons";
 
 export function ThemeToggle() {
   const { theme, toggleTheme, isLoaded } = useTheme();
@@ -29,7 +28,7 @@ export function ThemeToggle() {
             exit={{ opacity: 0, rotate: 180, scale: 0.65 }}
             transition={{ duration: reducedMotion ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Icon size={DEFAULT_ICON_SIZE} aria-hidden="true" />
+            <Icon size={16} aria-hidden="true" />
           </motion.span>
         </AnimatePresence>
       </span>
