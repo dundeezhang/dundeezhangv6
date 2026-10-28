@@ -939,7 +939,8 @@ html[data-signature-intro] .masthead-domain {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
+  /* The signature's .com reveal remains animated alongside its SVG effects. */
+  *:not(.masthead-domain),
   *::before,
   *::after {
     animation: none !important;

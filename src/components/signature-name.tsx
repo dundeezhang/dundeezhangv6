@@ -25,7 +25,6 @@ export function SignatureName() {
     const domain = name?.querySelector<HTMLButtonElement>(".masthead-domain-text");
     if (!isClient || !name || !svg || !domain) return;
     const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const fallen = new Set<number>();
     const pointers = new Map<number, PiecePointer>();
     let physics: SignaturePhysics | undefined;
@@ -96,8 +95,7 @@ export function SignatureName() {
       domain.toggleAttribute("data-hovered", domainHovered);
       domainControl?.stop();
       const target = domainHovered ? domainHoverScale() : 1;
-      if (reducedMotion.matches) setDomainScale(target);
-      else domainControl = animate(domainScale, target, { duration: 0.3, ease: [0.22, 1, 0.36, 1], onUpdate: setDomainScale });
+      domainControl = animate(domainScale, target, { duration: 0.3, ease: [0.22, 1, 0.36, 1], onUpdate: setDomainScale });
     };
     const measure = () => {
       const typography = getComputedStyle(name.closest("h1")!);
@@ -131,7 +129,7 @@ export function SignatureName() {
         letter.glyph.toggleAttribute("data-hovered", hovered);
         const target = hovered ? 1 : 0;
         letter.control?.stop();
-        if (reducedMotion.matches || letter.progress === target) paintLetter(letter, target);
+        if (letter.progress === target) paintLetter(letter, target);
         else letter.control = animate(letter.progress, target, { duration: 0.26, ease: [0.22, 1, 0.36, 1], onUpdate: progress => paintLetter(letter, progress) });
       });
     };
@@ -215,7 +213,6 @@ export function SignatureName() {
       await Promise.all(letterIds.map(async (id, order) => {
         const letter = letters[id];
         letter.control?.stop();
-        if (reducedMotion.matches) { paintLetter(letter, 0); return; }
         const control = animate(1, 0, { duration, delay: order * step, ease: [0.65, 0, 0.25, 1], onUpdate: progress => paintLetter(letter, progress) });
         letter.control = control;
         await control;
@@ -288,7 +285,6 @@ export function SignatureName() {
     };
     hoverDomain.current = setDomainHover;
     const reset = () => { activate(null); setDomainHover(false); };
-    const onMotionPreferenceChange = () => { reset(); if (reducedMotion.matches) void recover(); };
     const onScroll = () => {
       if (window.scrollY === previousScroll) return;
       previousScroll = window.scrollY;
@@ -306,7 +302,6 @@ export function SignatureName() {
       if (!disposed) { measure(); ready = true; name.setAttribute("data-outline-ready", ""); }
     });
     finePointer.addEventListener("change", reset);
-    reducedMotion.addEventListener("change", onMotionPreferenceChange);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("keydown", onKey);
     window.addEventListener("pointermove", onPointerMove, { passive: true });
@@ -319,7 +314,6 @@ export function SignatureName() {
       physics?.dispose();
       domainControl?.stop();
       finePointer.removeEventListener("change", reset);
-      reducedMotion.removeEventListener("change", onMotionPreferenceChange);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("keydown", onKey);
       window.removeEventListener("pointermove", onPointerMove);

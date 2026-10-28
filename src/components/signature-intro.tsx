@@ -38,7 +38,6 @@ export function SignatureIntro() {
     const overlay = overlayRef.current;
     if (!isClient || !overlay || html.dataset.signatureIntro !== "pending") return;
 
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const controls = new Set<{ stop: () => void }>();
     let cancelled = false;
 
@@ -59,14 +58,13 @@ export function SignatureIntro() {
     document.addEventListener("keydown", finish, { once: true, capture: true });
     window.addEventListener("wheel", finish, { once: true, passive: true });
     window.addEventListener("resize", finish, { once: true });
-    reducedMotion.addEventListener("change", finish);
     const failSafe = window.setTimeout(finish, 6500);
 
     async function play() {
       const heading = document.querySelector<HTMLElement>(".masthead");
       const mark = overlay!.querySelector<HTMLElement>(".signature-mark");
       const curtain = overlay!.querySelector<HTMLElement>(".signature-curtain");
-      if (!heading || !mark || !curtain || reducedMotion.matches || window.scrollY > 10) {
+      if (!heading || !mark || !curtain || window.scrollY > 10) {
         finish();
         return;
       }
@@ -185,7 +183,6 @@ export function SignatureIntro() {
       document.removeEventListener("keydown", finish, true);
       window.removeEventListener("wheel", finish);
       window.removeEventListener("resize", finish);
-      reducedMotion.removeEventListener("change", finish);
     };
   }, [isClient]);
 

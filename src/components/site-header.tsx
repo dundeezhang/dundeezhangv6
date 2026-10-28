@@ -25,7 +25,6 @@ export function SiteHeader({ children }: { children: ReactNode }) {
     if (!header) return;
 
     const root = document.documentElement;
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
     let previousProgress = -1;
     let navigating = false;
@@ -33,9 +32,7 @@ export function SiteHeader({ children }: { children: ReactNode }) {
 
     const scrollProgress = () => {
       const scroll = Math.max(0, window.scrollY);
-      return reducedMotion.matches
-        ? Number(scroll > 90)
-        : Math.min(scroll / 180, 1);
+      return Math.min(scroll / 180, 1);
     };
     const setProgress = (progress: number) => {
       if (progress === previousProgress) return;
@@ -64,10 +61,6 @@ export function SiteHeader({ children }: { children: ReactNode }) {
         interruptTransition();
       }
     };
-    const onMotionPreferenceChange = () => {
-      interruptTransition();
-      scheduleUpdate();
-    };
     const measure = () => {
       root.style.setProperty("--site-header-height", `${header.getBoundingClientRect().height}px`);
     };
@@ -83,7 +76,7 @@ export function SiteHeader({ children }: { children: ReactNode }) {
       frame = requestAnimationFrame(() => {
         frame = 0;
         const target = scrollProgress();
-        if (reducedMotion.matches || target === previousProgress) {
+        if (target === previousProgress) {
           setProgress(target);
           navigating = false;
           return;
@@ -106,7 +99,6 @@ export function SiteHeader({ children }: { children: ReactNode }) {
     window.addEventListener("wheel", interruptTransition, { passive: true });
     window.addEventListener("touchstart", interruptTransition, { passive: true });
     window.addEventListener("keydown", onScrollKey);
-    reducedMotion.addEventListener("change", onMotionPreferenceChange);
 
     return () => {
       cancelAnimationFrame(frame);
@@ -117,7 +109,6 @@ export function SiteHeader({ children }: { children: ReactNode }) {
       window.removeEventListener("wheel", interruptTransition);
       window.removeEventListener("touchstart", interruptTransition);
       window.removeEventListener("keydown", onScrollKey);
-      reducedMotion.removeEventListener("change", onMotionPreferenceChange);
       root.style.removeProperty("--site-header-height");
     };
   }, []);

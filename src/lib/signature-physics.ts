@@ -33,7 +33,6 @@ const frameDuration = 1000 / 60;
 // This module (including Matter) is requested only after a signature piece is clicked.
 export function createSignaturePhysics() {
   const engine = Engine.create({ enableSleeping: true });
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const layer = document.createElement("div");
   layer.className = "signature-physics-layer";
   layer.dataset.state = "idle";
@@ -108,7 +107,7 @@ export function createSignaturePhysics() {
     Composite.remove(engine.world, drag.constraint);
     if (piece.element.hasPointerCapture(drag.pointerId)) piece.element.releasePointerCapture(drag.pointerId);
     delete piece.element.dataset.dragging;
-    if (toss && !reducedMotion.matches) {
+    if (toss) {
       // A long hold should release gently rather than reuse an old fast move.
       const fresh = performance.now() - drag.last.time < 110;
       const velocity = fresh ? drag.velocity : { x: 0, y: 0 };
@@ -189,14 +188,8 @@ export function createSignaturePhysics() {
       start();
     });
 
-    if (reducedMotion.matches) {
-      Body.setPosition(body, { x: body.position.x, y: window.innerHeight - height / 2 - 1 });
-      Sleeping.set(body, true);
-      render(piece, body.position.x, body.position.y, width, height, 0);
-    } else {
-      Body.setVelocity(body, { x: (input.id % 3 - 1) * 0.7, y: 0 });
-      Body.setAngularVelocity(body, (input.id % 2 ? 1 : -1) * 0.018);
-    }
+    Body.setVelocity(body, { x: (input.id % 3 - 1) * 0.7, y: 0 });
+    Body.setAngularVelocity(body, (input.id % 2 ? 1 : -1) * 0.018);
     if (input.pointer) grab(piece, input.pointer);
     start();
   }
@@ -221,7 +214,6 @@ export function createSignaturePhysics() {
         returnResolvers.delete(resolve);
         resolve();
       };
-      if (reducedMotion.matches) { finish(); return; }
       const control = animate(0, 1, {
         duration: 0.85, delay: index * 0.045, ease: [0.32, 0, 0.16, 1],
         onUpdate: progress => {

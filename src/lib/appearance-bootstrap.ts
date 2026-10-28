@@ -13,9 +13,8 @@ export const appearanceBootstrap = `(() => {
     } catch {}
     root.dataset.theme = theme;
     root.classList.toggle('dark', theme === 'dark');
-    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      root.dataset.signatureIntro = 'pending';
-      setTimeout(() => { delete root.dataset.signatureIntro; }, 7500);
-    }
+    // The interactive signature intentionally keeps its full animation in reduced motion.
+    root.dataset.signatureIntro = 'pending';
+    setTimeout(() => { delete root.dataset.signatureIntro; }, 7500);
   } catch {}
 })();`;
